@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "matrixops.h": "c",
+        "time.h": "c",
+        "stdio.h": "c"
+    }
+}
