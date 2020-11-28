@@ -1,0 +1,127 @@
+i-j-k: boyut = 1000 gecen zaman:  6.708487 seconds 
+
+i-k-j: boyut = 1000 gecen zaman:  4.105247 seconds 
+
+j-i-k: boyut = 1000 gecen zaman:  5.121334 seconds 
+
+j-k-i: boyut = 1000 gecen zaman:  10.380259 seconds 
+
+k-i-j: boyut = 1000 gecen zaman:  3.967944 seconds 
+
+k-j-i: boyut = 1000 gecen zaman:  10.103418 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 2000 gecen zaman:  75.075277 seconds 
+
+i-k-j: boyut = 2000 gecen zaman:  32.415981 seconds 
+
+j-i-k: boyut = 2000 gecen zaman:  57.472853 seconds 
+
+j-k-i: boyut = 2000 gecen zaman:  94.041791 seconds 
+
+k-i-j: boyut = 2000 gecen zaman:  32.251251 seconds 
+
+k-j-i: boyut = 2000 gecen zaman:  92.454177 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 3000 gecen zaman:  267.853832 seconds 
+
+i-k-j: boyut = 3000 gecen zaman:  110.690478 seconds 
+
+j-i-k: boyut = 3000 gecen zaman:  203.592004 seconds 
+
+j-k-i: boyut = 3000 gecen zaman:  313.731119 seconds 
+
+k-i-j: boyut = 3000 gecen zaman:  103.649143 seconds 
+
+k-j-i: boyut = 3000 gecen zaman:  309.264053 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 4000 gecen zaman:  809.414231 seconds 
+
+i-k-j: boyut = 4000 gecen zaman:  286.766190 seconds 
+
+j-i-k: boyut = 4000 gecen zaman:  659.774819 seconds 
+
+j-k-i: boyut = 4000 gecen zaman:  1072.275775 seconds 
+
+k-i-j: boyut = 4000 gecen zaman:  299.177699 seconds 
+
+k-j-i: boyut = 4000 gecen zaman:  879.926014 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 5000 gecen zaman:  1531.859277 seconds 
+
+i-k-j: boyut = 5000 gecen zaman:  556.932420 seconds 
+
+j-i-k: boyut = 5000 gecen zaman:  1231.799534 seconds 
+
+j-k-i: boyut = 5000 gecen zaman:  1883.584511 seconds 
+
+k-i-j: boyut = 5000 gecen zaman:  493.230131 seconds 
+
+k-j-i: boyut = 5000 gecen zaman:  2243.049359 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 6000 gecen zaman:  2671.180976 seconds 
+
+i-k-j: boyut = 6000 gecen zaman:  955.226575 seconds 
+
+j-i-k: boyut = 6000 gecen zaman:  2526.817787 seconds 
+	
+j-k-i: boyut = 6000 gecen zaman:  4821.728352 seconds 
+
+k-i-j: boyut = 6000 gecen zaman:  902.605604 seconds 
+
+k-j-i: boyut = 6000 gecen zaman:  3694.939387 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 7000 gecen zaman:  4143.597124 seconds 
+
+i-k-j: boyut = 7000 gecen zaman:  1410.121134 seconds 
+
+j-i-k: boyut = 7000 gecen zaman:  3193.727673 seconds 
+
+j-k-i: boyut = 7000 gecen zaman:  6545.972436 seconds 
+
+k-i-j: boyut = 7000 gecen zaman:  1425.013271 seconds 
+
+k-j-i: boyut = 7000 gecen zaman:  6828.622853 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 8000 gecen zaman:  6370.605926 seconds 
+
+i-k-j: boyut = 8000 gecen zaman:  2120.121352 seconds 
+
+j-i-k: boyut = 8000 gecen zaman:  6981.600271 seconds 
+
+j-k-i: boyut = 8000 gecen zaman:  10471.825453 seconds 
+
+k-i-j: boyut = 8000 gecen zaman:  1955.334241 seconds 
+
+k-j-i: boyut = 8000 gecen zaman:  8407.299368 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 9000 gecen zaman:  8098.775217 seconds 
+
+i-k-j: boyut = 9000 gecen zaman:  2845.640697 seconds 
+
+j-i-k: boyut = 9000 gecen zaman:  5992.221845 seconds 
+
+j-k-i: boyut = 9000 gecen zaman:  25009.001480 seconds 
+
+k-i-j: boyut = 9000 gecen zaman:  3860.977983 seconds 
+
+k-j-i: boyut = 9000 gecen zaman:  33055.675792 seconds 
+
+----------------------------------------------------------------
+
+i-j-k: boyut = 10000 gecen zaman:  17430.680329 seconds
