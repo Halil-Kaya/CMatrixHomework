@@ -1,162 +1,257 @@
-/*
- * compress.c
- *
- *  Created on: 15 Kas 2020
- *      Author: X550V
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "compress.h"
 #include <time.h>
 
-void compress_CRS(int **A, int *nz, int *col_ind, int *row_ptr, int N, int M) {
-	int count = 0, count2 = 0;
-	int rowCheck = 1;
-	// Creating nz, col_ind and row_ptr
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (A[i][j] != 0) { // Eðer matrisin gelen elemaný 0' dan farklý ise nz'ye ekliyoruz.
-				nz[count] = (int) A[i][j]; // creating nz
-				col_ind[count] = j;             // creating col_ind
-				if (rowCheck == 1) { // Satýrýn 0'dan farklý ilk elemaný ise row_ptr'ye
-					row_ptr[count2] = count; // ekliyoruz ve satýr deðiþene kadar buraya girmiyoruz.
-					count2++;
-					rowCheck = 0;
-				}
-				count++;
-			}
+int** matrixOlustur(int satir, int sutun){
+
+    int** dizi;
+    dizi=(int**)malloc(satir*sizeof(int*));
+    int i=0;
+    int j=0;
+
+    for(i=0;i<satir;i++){
+        *(dizi+i)=(int*)malloc(sutun*sizeof(int));
+    }
+
+    srand (( unsigned ) time (NULL) ); 
+
+    for(i=0;i<satir;i++){
+
+        for(j=0;j<sutun;j++){
+
+            *(*(dizi+i)+j)= rand() % 10 ;
+
 		}
-		rowCheck = 1;
+
+    }
+
+	for(int i = 0 ; i < satir*sutun-satir-sutun ; i++){
+		*(*(dizi + rand() % satir )+ rand() % sutun) = 0;
 	}
-	row_ptr[count2] = count;              //row_ptr nin son elemanýný ekliyoruz.
+
+
+    return dizi;
 }
 
-int** decompress_CRS(int *nz, int *col_ind, int *row_ptr, int N, int M) {
-	int **A = createMatrix(N, M); // Döndüreceðimiz matrisimiz için bellekte yer açýyoruz.
-	int count = 0, count2 = 1;
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (col_ind[count] == j) { // col_ind deki bütün deðerleri sütunlarýmýzla karþýlaþtýrýyoruz
-				if (count != row_ptr[count2]) { // eðer eþit çýkarsa row_ptr de bulunanan ilk satýr elemanlarý için bir kontrol yapýyoruz
-					A[i][j] = (int) nz[count]; // bu kontrolleri geçen yerlere nz deki elemanlarý geçemeyen yerlerede 0 larý yerleþtiriyoruz.
-					count++;
+void ekranaBastirDizi(int boyut,int *dizi){
+
+	for(int i = 0; i < boyut ;i++){
+		printf("%d ", *(dizi + i) );
+	} 
+
+	printf("\n---------------------------------------\n");
+
+}
+
+void ekranaBastirMatrix(int satir, int sutun, int **dizi) {
+
+	for (int i = 0; i < satir; i++) {
+
+		for (int j = 0; j < sutun; j++) {
+
+			printf("%d ", *(*(dizi + i) + j ));
+
+		}
+
+		printf("\n");
+
+	}
+
+	printf("---------------------------------------\n");
+}
+
+
+
+void compress_CRS(int **dizi, int *nz, int *col_ind, int *row_ptr, int satir, int sutun) {
+
+
+	int satirKontrol = 1;
+	int index1 = 0;
+	int index2 = 0;
+
+	for (int i = 0; i < satir; i++) {
+		
+		for (int j = 0; j < satir; j++) {
+		
+			if (*(*(dizi + i) + j) != 0) { 
+		
+				*(nz + index1) = *(*(dizi + i) + j); 
+				*(col_ind + index1) = j;             
+		
+				if (satirKontrol == 1) { 
+		
+					*(row_ptr + index2) = index1;
+					satirKontrol = 0;
+					index2++;
+		
+				}
+		
+				index1++;
+		
+			}
+		
+		}
+
+		satirKontrol = 1;
+
+	}
+
+	*(row_ptr + index2) = index1;
+
+}
+
+int** decompress_CRS(int *nz, int *col_ind, int *row_ptr, int satir, int sutun) {
+	
+	int **dizi = matrixOlustur(satir, sutun);
+	int index1 = 0;
+	int index2 = 1;
+	
+	for (int i = 0; i < satir; i++) {
+	
+		for (int j = 0; j < sutun; j++) {
+	
+			if ( *(col_ind + index1) == j ) { 
+	
+				if (index1 != *(row_ptr + index2)) { 
+	
+					*(*(dizi + i) + j ) = *(nz + index1);
+					index1++;
+	
 				} else {
-					A[i][j] = 0;
+	
+					*(*(dizi + i) + j ) = 0;
+	
 				}
 			} else {
-				A[i][j] = 0;
+	
+				*(*(dizi + i) + j ) = 0;
 			}
 		}
-		count2++;
+	
+		index2++;
+	
 	}
-	return A;
+	
+	return dizi;
 }
 
-void compress_CCS(int **A, int *nz, int *row_ind, int *col_ptr, int N, int M) {
-	int count = 0, count2 = 0;
-	int colCheck = 1;
-	// Creating nz, col_ind and row_ptr
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (A[j][i] != 0) { // Eðer matrisin gelen elemaný 0' dan farklý ise nz'ye ekliyoruz.
-				nz[count] = (int) A[j][i]; // Ancak burada CRS'den farklý olarak ilkten sütundaki sayýlarý alýyoruz, creating nz
-				row_ind[count] = j;             // creating row_ind
-				if (colCheck == 1) { // Sütunun 0'dan farklý ilk elemaný ise col_ptr'ye
-					col_ptr[count2] = count; // ekliyoruz ve sütun deðiþene kadar buraya girmiyoruz.
-					count2++;
-					colCheck = 0;
+void compress_CCS(int **dizi, int *nz, int *row_ind, int *col_ptr, int satir, int sutun) {
+
+	int sutunKontrol = 1;
+	int index1 = 0;
+	int index2 = 0;
+
+	for (int i = 0; i < satir; i++) {
+
+		for (int j = 0; j < sutun; j++) {
+
+			if (*(*(dizi + i) + j ) != 0) { 
+
+				*(nz + index1) = *(*(dizi + i) + j); 
+				*(row_ind + index1) = j;  
+
+				if (sutunKontrol == 1) { 
+
+					*(col_ptr + index2) = index1;
+					index2++;
+					sutunKontrol = 0;
+
 				}
-				count++;
+
+				index1++;
+
 			}
+
 		}
-		colCheck = 1;
+
+		sutunKontrol = 1;
 	}
-	col_ptr[count2] = count;
+
+	*(col_ptr + index2) = index1;
 
 }
 
-int** decompress_CCS(int *nz, int *row_ind, int *col_ptr, int N, int M) {
-	int **A = createMatrix(N, M); // Döndüreceðimiz matrisimiz için bellekte yer açýyoruz.
-	int count = 0, count2 = 1;
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (row_ind[count] == j) { // col_ind deki bütün deðerleri sütunlarýmýzla karþýlaþtýrýyoruz
-				if (count != col_ptr[count2]) { // eðer eþit çýkarsa row_ptr de bulunanan ilk satýr elemanlarý için bir kontrol yapýyoruz
-					A[j][i] = (int) nz[count]; // bu kontrolleri geçen yerlere nz deki elemanlarý geçemeyen yerlerede 0 larý yerleþtiriyoruz.
-					count++;
+int** decompress_CCS(int *nz, int *row_ind, int *col_ptr, int satir, int sutun) {
+
+	int **dizi = matrixOlustur(satir, sutun); 
+	int index1 = 0;
+	int index2 = 1;
+
+	for (int i = 0; i < satir; i++) {
+
+		for (int j = 0; j < sutun; j++) {
+
+			if (*(row_ind + index1) == j) { 
+
+				if (index1 == *(col_ptr + index2)) {
+					
+					*(*(dizi + i) + j ) = 0;
+
 				} else {
-					A[j][i] = 0;
+
+					*(*(dizi + i) + j ) = *(nz + index1); 
+					index1++;					
+
 				}
+
 			} else {
-				A[j][i] = 0;
+
+				*(*(dizi + i) + j ) = 0;
+
 			}
 		}
-		count2++;
+
+		index2++;
+
 	}
-	return A;
+
+	return dizi;
 }
 
-void compress_IJ(int **A, int *nz, int *rows, int *cols, int N, int M) {
-	int count = 0;
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (A[i][j] != 0) { // If the element of this index different than 0.
-				nz[count] = (int) A[i][j]; // Then we add it to the nz list.
-				rows[count] = i; // Adding row index to given rows list.
-				cols[count] = j; // Adding column index to the given cols list.
-				count++;  //and we increase count.
+void compress_IJ(int **dizi, int *nz, int *rows, int *cols, int satir, int sutun) {
+
+	int index = 0;
+	for (int i = 0; i < satir; i++) {
+
+		for (int j = 0; j < sutun; j++) {
+
+			if ( *(*(dizi + i) + j ) != 0 ) { 
+
+				*(nz + index) = *(*(dizi + i) + j); 
+				*(rows + index) = i; 
+				*(cols + index) = j; 
+				index++; 
 			}
+
 		}
+
 	}
 }
 
-int** decompress_IJ(int *nz, int *rows, int *cols, int N, int M) {
-	int **A = createMatrix(N, M); // We create the matrix that we return.
-	int counter = 0;
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			if (rows[counter] == i && cols[counter] == j) { // If the value of rows is equals to i
-				                                            // and the value of cols is equals to j
-				                                            // it means that the place we need to put to value in nz.
-				A[i][j] = nz[counter];                      // We put the value.
-				counter++;                                  // and we increase the counter.
+int** decompress_IJ(int *nz, int *rows, int *cols, int satir, int sutun) {
+
+	int **dizi = matrixOlustur(satir, sutun); 
+	int sayac = 0;
+	for (int i = 0; i < satir; i++) {
+
+		for (int j = 0; j < sutun; j++) {
+
+			if (*(rows + sayac) == i && *(cols + sayac) == j) {
+				                                           
+				*(*(dizi + i) + j ) = *(nz + sayac);                     
+				sayac++;                                  
+
 			}
 			else{
-				A[i][j] = 0;                                // else there is no value to put except 0, We put zero.
-			}
-		}
-	}
-	return A;
-}
 
-int** createMatrix(int n, int m) {
-	int **M;
-	M = (int**) calloc(n, sizeof(int*));
-	for (int i = 0; i < m; i++) {
-		M[i] = (int*) calloc(m, sizeof(int));
-	}
-	srand(time(0));
-	int count = 0;
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < m; j++) {
-			count++;
-			if ((count + i + j + rand() % 3) % rand() % 5 == 0
-					|| ((count + i + j + rand() % 3) % rand() % 4) == 0) { // matrisimize daha çok random
-				M[i][j] = 0;                                               // 0 eklemek için böyle bir þey yazdým.
-			} else {
-				M[i][j] = rand() % 10 + 1; // matrisimizi random int ler ile dolduruyoruz.
+				*(*(dizi + i) + j ) = 0;                              
+
 			}
 		}
-	return M;
-}
-void printMatrix(int n, int m, int **M) {
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			printf("%d   ", M[i][j]);
-		}
-		puts("");
 	}
-	puts("-----------");
+
+	return dizi;
+
 }
 

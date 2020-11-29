@@ -1,58 +1,76 @@
-/*
- * main.c
- *
- *  Created on: 15 Kas 2020
- *      Author: X550V
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "compress.h"
-#define N 5
-#define M 5
+#define satir 5
+#define sutun 5
 
-int main(void) {
+int main(int argc,char **argv) {
 
-	fflush(stdin);
-	fflush(stdout);
-	int **A = createMatrix(N, M);
-	printMatrix(N, M, A);
+	int **A = matrixOlustur(satir, sutun);
+	printf("matrixin hali:\n\n");
+	ekranaBastirMatrix(satir, sutun, A);
 
-	int *nzForCRS = (int*) malloc(sizeof(int) * N * M);
 
-	int *nzForCCS = (int*) malloc(sizeof(int) * N * M);
+	int sifirOlmayanAdet = sifirOlmayanlariSay(A);
 
-	int *nzForIJ = (int*) malloc(sizeof(int) * N * M);
+	int *nz = (int*)malloc(satir*sutun*sizeof(int));
+	int *rows = (int*)malloc(satir*sutun*sizeof(int));
+	int *cols = (int*)malloc(satir*sutun*sizeof(int));
+	
+	compress_IJ(A,nz,rows,cols,satir,sutun);
+	printf("compress_IJ fonksiyonuyla sikistirilmis hali:\n\n");
+	ekranaBastirDizi(sifirOlmayanAdet,nz);
 
-	int *col_ind = (int*) malloc(sizeof(int) * N * M);
+	A = decompress_IJ(nz,rows,cols,satir,sutun);
+	printf("decompress_IJ fonksiyonuyla acilmis hali:\n\n");
+	ekranaBastirMatrix(satir,sutun,A);
 
-	int *row_ptr = (int*) malloc(sizeof(int) * (N + 1));
+	int *col_ind = (int*)malloc(satir*sutun*sizeof(int));
+	int *row_ptr = (int*)malloc(satir*sutun*sizeof(int));
 
-	int *row_ind = (int*) malloc(sizeof(int) * (N * M));
+	compress_CRS(A,nz,col_ind,row_ptr,satir,sutun);
+	printf("compress_CRS fonksiyonuyla sikistirilmis hali:\n\n");
+	ekranaBastirDizi(sifirOlmayanAdet,nz);
 
-	int *col_ptr = (int*) malloc(sizeof(int) * (N + 1));
+	A = decompress_CRS(nz,col_ind,row_ptr,satir,sutun);
+	printf("decompress_CRS fonksiyonuyla acilmis hali:\n\n");
+	ekranaBastirMatrix(satir,sutun,A);
 
-	int *rows = (int*) malloc(sizeof(int) * (N * M));
+	int *row_ind = (int*)malloc(satir*sutun*sizeof(int));
+	int *col_ptr = (int*)malloc(satir*sutun*sizeof(int));
 
-	int *cols = (int*) malloc(sizeof(int) * (N * M));
+	compress_CCS(A,nz,row_ind,col_ptr,satir,sutun);
+	printf("compress_CCS fonksiyonuyla sikistirilmis hali:\n\n");
+	ekranaBastirDizi(sifirOlmayanAdet,nz);
 
-	compress_CRS(A, nzForCRS, col_ind, row_ptr, N, M);
+	A = decompress_CCS(nz,row_ind,col_ptr,satir,sutun);
+	printf("decompress_CCS fonksiyonuyla acilmis hali:\n\n");
+	ekranaBastirMatrix(satir,sutun,A);
 
-	compress_CCS(A, nzForCCS, row_ind, col_ptr, N, M);
 
-	compress_IJ(A, nzForIJ, rows, cols, N, M);
 
-	int **D = decompress_IJ(nzForIJ, rows, cols, N, M);
-	printMatrix(N, M, D);
-	decompress_IJ(nzForIJ, rows, cols, N, M);
-/*	for (int i = 0; i < N*M; ++i) {
-		printf("%d, %d \n",rows[i], cols[i]);
+
+
+
+
+
+	return 0;
+}
+
+int sifirOlmayanlariSay(int **dizi){
+
+	int adet = 0;
+	for (int i = 0; i < satir; i++) {
+
+		for (int j = 0; j < sutun; j++) {
+
+			if ( *(*(dizi + i) + j ) != 0 ) { 
+
+				adet++; 
+			}
+
+		}
+
 	}
-*/
-	/*int **B = decompress_CRS(nzForCRS, col_ind, row_ptr, N, M);
-	printMatrix(N, M, B);
-	int **C = decompress_CCS(nzForCCS, row_ind, col_ptr, N, M);
-	printMatrix(N, M, C);
-*/
-	return EXIT_SUCCESS;
+	return adet;
 }

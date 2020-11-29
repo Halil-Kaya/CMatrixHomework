@@ -7,16 +7,15 @@ float** matrixOlustur();
 void ekranaBas(float** dizi);
 
 int boyut = 0;
-int first = 0;
 
 int main(){
 
-    boyut = 10000;
-
-    for(int i = 10 ; i < 11; i++){
+    for(int i = 1 ; i < 11; i++){
 
 
+        boyut = 1000 * (i);
 
+        
         float **matrix1;
         matrix1 = matrixOlustur();
 
@@ -26,10 +25,9 @@ int main(){
         float** sonuc;
         sonuc = matrixMatrixMultiply(matrix1,matrix2);
 
-        boyut = 1000 * (i) ;
+        
 
     }    
-    //ekranaBas(sonuc);
 
     return 0;
 }
@@ -58,7 +56,7 @@ float** matrixMatrixMultiply(float** matrix1,float** matrix2){
     for(i = 0 ;i< boyut ; i++){
         for(j = 0 ; j< boyut ; j++){
             for(k = 0 ; k < boyut ; k++){
-                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); // diziyi donerek icerisine aralik kadar random sayi atiyor
+                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); 
             }
         }
     }
@@ -75,7 +73,7 @@ float** matrixMatrixMultiply(float** matrix1,float** matrix2){
     for(i = 0 ;i<boyut ; i++){
         for(k = 0 ; k<boyut ; k++){
             for(j = 0 ; j < boyut ; j++){
-                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); // diziyi donerek icerisine aralik kadar random sayi atiyor
+                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); 
             }
         }
     }
@@ -92,7 +90,7 @@ float** matrixMatrixMultiply(float** matrix1,float** matrix2){
     for(j = 0 ;j<boyut ; j++){
         for(i = 0 ; i<boyut ; i++){
             for(k = 0 ; k < boyut ; k++){
-                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); // diziyi donerek icerisine aralik kadar random sayi atiyor
+                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); 
             }
         }
     }
@@ -111,7 +109,7 @@ float** matrixMatrixMultiply(float** matrix1,float** matrix2){
     for(j = 0 ;j<boyut ; j++){
         for(k = 0 ; k<boyut ; k++){
             for(i = 0 ; i < boyut ; i++){
-                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); // diziyi donerek icerisine aralik kadar random sayi atiyor
+                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); 
             }
         }
     }
@@ -127,7 +125,7 @@ float** matrixMatrixMultiply(float** matrix1,float** matrix2){
     for(k = 0 ;k<boyut ; k++){
         for(i = 0 ; i<boyut ; i++){
             for(j = 0 ; j < boyut ; j++){
-                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); // diziyi donerek icerisine aralik kadar random sayi atiyor
+                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); 
             }
         }
     }
@@ -143,7 +141,7 @@ float** matrixMatrixMultiply(float** matrix1,float** matrix2){
     for(k = 0 ;k<boyut ; k++){
         for(j = 0 ; j<boyut ; j++){
             for(i = 0 ; i < boyut ; i++){
-                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); // diziyi donerek icerisine aralik kadar random sayi atiyor
+                *(*(sonuc+i)+j) += ( *(*(matrix1 + i)+k) )  *  ( *(*(matrix2 + k) +j) ); 
             }
         }
     }
