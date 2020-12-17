@@ -26,6 +26,11 @@ int **createBoard(){
 
 void haraketYazdir(char tas,poz ilkPozisyon){
 
+
+    struct poz* (*hareketFonksiyonlari[])( struct poz) = {
+        &haraketSah,&haraketVezir,&haraketFil,&haraketAt,&haraketKale,&haraketPiyon
+    };
+
     poz *tasinHaraketleri;
     int tasHaraketSayisi = 0;
 
@@ -35,32 +40,32 @@ void haraketYazdir(char tas,poz ilkPozisyon){
 
     if(tas == 'S'){
 
-        tasinHaraketleri = haraketSah(ilkPozisyon);
+        tasinHaraketleri = hareketFonksiyonlari[0](ilkPozisyon);
         tasHaraketSayisi = sahHaraketSayisi(konumi,konumj);
 
     }else if(tas == 'V'){
 
-        tasinHaraketleri = haraketVezir(ilkPozisyon);
+        tasinHaraketleri = hareketFonksiyonlari[1](ilkPozisyon);
         tasHaraketSayisi = vezirHaraketSayisi(konumi,konumj);
 
     }else if(tas == 'F'){
 
-        tasinHaraketleri = haraketFil(ilkPozisyon);
+        tasinHaraketleri = hareketFonksiyonlari[2](ilkPozisyon);
         tasHaraketSayisi = filHaraketSayisi(konumi,konumj);
 
     }else if(tas == 'A'){
 
-        tasinHaraketleri = haraketAt(ilkPozisyon);
+        tasinHaraketleri = hareketFonksiyonlari[3](ilkPozisyon);
         tasHaraketSayisi = atHaraketSayisi(konumi,konumj);
 
     }else if(tas == 'K'){
 
-        tasinHaraketleri = haraketKale(ilkPozisyon);
+        tasinHaraketleri = hareketFonksiyonlari[4](ilkPozisyon);
         tasHaraketSayisi = kaleHaraketSayisi(konumi,konumj);
 
     }else if(tas == 'P'){
 
-        tasinHaraketleri = haraketPiyon(ilkPozisyon);
+        tasinHaraketleri = hareketFonksiyonlari[5](ilkPozisyon);
         tasHaraketSayisi = piyonHaraketSayisi(konumi,konumj);
 
     }

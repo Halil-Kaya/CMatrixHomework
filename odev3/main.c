@@ -28,7 +28,7 @@ int main(){
 
         if(secim == 'c'){
 
-            printf("%stas giriniz şah: S, vezir: V, fil: F, at: A, kale: K\n",KGRN);
+            printf("%stas giriniz şah: S, vezir: V, fil: F, at: A, kale: K, Piyon: P\n",KGRN);
             scanf(" %c",&tas);
             printf("degismis tas = %c\n",tas);
 
