@@ -7,6 +7,9 @@
 
 using namespace std;
 
+Matrix::~Matrix(){
+
+}
 
 Matrix::Matrix(double* _entries,int _rows,int _cols){
 
@@ -204,6 +207,9 @@ bool Matrix::operator==(const Matrix& matrix2){
     return true;
 }
 
+Vector::~Vector(){
+    
+}
 
 
 Vector::Vector(double* _entries,int _rows) : Matrix(_entries,_rows,1){

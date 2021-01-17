@@ -12,6 +12,7 @@ class Matrix{
         int rows;
         int cols;
 
+        ~Matrix();
 
         Matrix(double* _entries,int _rows,int _cols);
         
@@ -40,6 +41,7 @@ class Vector : public Matrix{
 
         double l2norm;
 
+        ~Vector();
 
         Vector(double* _entries,int _rows);
 
