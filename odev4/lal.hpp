@@ -29,7 +29,7 @@ class Matrix{
 
         virtual void transpose();
         
-        virtual void norm();
+        virtual double norm();
 };
 
 
@@ -59,8 +59,7 @@ class Vector : public Matrix{
 
 };
 
-Vector **CreateVectorArray(int,int);
-void FillVectorArray(Vector** vectorArray, int m, int p);
-Matrix vectorArray2Matrix(Vector**,int,int);
+Vector *vectorArrayOlustur(int,int);
+Matrix vectorArray2Matrix(Vector*,int,int);
 
 #endif

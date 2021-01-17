@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include <time.h>
+
 #include "lal.hpp"
 
 using namespace std;
@@ -27,8 +29,8 @@ void Matrix::print(){
             tmpCol = 0;
             cout << "\n";
         }
-    
-        cout << entries[tmpCol + rows*tmpRow] << " ";
+
+        cout << entries[rows*tmpRow + tmpCol] << " ";
 
         tmpCol++;
 
@@ -72,7 +74,7 @@ Matrix Matrix::operator+(const Matrix& matrix2){
 
 Matrix Matrix::operator-(const Matrix& matrix2){
 
-    double* entries = (double*)malloc(this->rows*this->cols*sizeof(double));
+    double* entries = (double*)calloc(this->rows*this->cols,sizeof(double));
    
     for(int i = 0 ; i < rows*cols ;i++){
 
@@ -107,7 +109,7 @@ Matrix Matrix::operator*(const Matrix& matrix2){
 
     double* yeniMatrix;
 
-    yeniMatrix = (double*)malloc((this->rows*matrix2.cols)*sizeof(double));
+    yeniMatrix = (double*)calloc((this->rows*matrix2.cols),sizeof(double));
 
     Matrix carpmaMatrix(yeniMatrix,this->rows,matrix2.cols);
 
@@ -138,7 +140,7 @@ Matrix Matrix::operator*(const Matrix& matrix2){
 
 Vector Matrix::operator*(const Vector &vector) {
 
-	double *entries = (double*) malloc(this->rows * sizeof(double));
+	double *entries = (double*) calloc(this->rows , sizeof(double));
 	Vector toplamVector(entries, this->rows);
 
 
@@ -205,12 +207,15 @@ bool Matrix::operator==(const Matrix& matrix2){
 
 
 Vector::Vector(double* _entries,int _rows) : Matrix(_entries,_rows,1){
-    
-    double accum = 0.;
+
+    double accum = 0;
     for (int i = 0; i < _rows; ++i) {
         accum += _entries[i] * _entries[i];
     }
-    l2norm = sqrt(accum);
+
+    
+    this->l2norm = sqrt(accum);
+
 }
 
 
@@ -229,7 +234,7 @@ void Vector::print(){
 
 Vector Vector::operator+(const Vector& vector2){
     
-    double* entries = (double*)malloc(this->rows*sizeof(double));
+    double* entries = (double*)calloc(this->rows,sizeof(double));
 
     for(int i = 0; i < this->rows; i++){
 
@@ -263,7 +268,7 @@ Vector Vector::operator+(const Vector& vector2){
 Vector Vector::operator-(const Vector& vector2){
 
 
-    double* entries = (double*)malloc(this->rows*sizeof(double));
+    double* entries = (double*)calloc(this->rows ,sizeof(double));
 
     for(int i = 0; i < this->rows; i++){
 
@@ -294,7 +299,7 @@ Vector Vector::operator-(const Vector& vector2){
 Vector Vector::operator*(const Vector& vector2){
 
 
-    double* icCarpimVectorEntrie = (double*)malloc(sizeof(double));
+    double* icCarpimVectorEntrie = (double*)calloc(1,sizeof(double));
 
 
     Vector icCarpimVector(icCarpimVectorEntrie,1);
@@ -339,6 +344,7 @@ bool Vector::operator==(const Vector& vector2){
 
     return true;
 }
+
 void Vector::operator++(){
 
     for(int i = 0;i<this->rows; i++){
@@ -348,9 +354,52 @@ void Vector::operator++(){
     }
 
 }
+
+
+void Vector::operator++(int) {
+
+	for (int i = 0; i < this->rows; ++i) {
+	
+    	++(this->entries[i]);
+	
+    }
+
+}
+
 void Matrix::transpose() {
 
-	if (typeid(*this).name() == typeid(Vector).name()) {
+	if (typeid(*this).name() == typeid(Matrix).name()) {
+
+
+        int size = this->rows * this->cols;
+
+		double *entries = (double*) malloc( size * sizeof(double));
+
+
+        int tmpCol = 0;
+        int tmpRow = 0;
+        for(int i = 0 ; i < size ;i++){
+
+            if(i%cols == 0 && i != 0){
+                tmpRow++;
+                tmpCol = 0;
+            }
+
+            entries[rows*tmpCol + tmpRow] =  this->entries[cols*tmpRow + tmpCol];
+
+            tmpCol++;
+        
+        }
+
+        int tpm = this->cols;
+        this->cols = this->rows;
+        this->rows = tpm;
+
+        this->entries = entries;
+
+
+	} else if(typeid(*this).name() == typeid(Vector).name()) {
+
 
         int size = this->rows;
 
@@ -363,88 +412,88 @@ void Matrix::transpose() {
 		}
 
 		this->entries = entries;
-
-	} else if(typeid(*this).name() == typeid(Matrix).name()) {
-
-        int size = this->rows * this->cols;
-
-		double *entries = (double*) malloc( size * sizeof(double));
-
-		for (int i = 0; i < size; i++) {
-
-			entries[i] = this->entries[size - i - 1];
-
-		}
-
-		this->entries = entries;
-
 	}
 }
 
-void Matrix::norm() {
+double Matrix::norm() {
+
+    double l2Norm = 0;
 
 	if (typeid(*this).name() == typeid(Matrix).name()) {
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        double l2Norm = 0.0;
 
 		for (int i = 0; i < this->rows * this->cols; ++i) {
+
 			l2Norm += pow(entries[i], 2);
+
 		}
 
 		l2Norm = sqrt(l2Norm);
 
-		cout << l2Norm ;
-
-
 	} else if(typeid(*this).name() == typeid(Vector).name()) {
 		
-        cout << dynamic_cast<Vector *>(this)->l2norm;
+
+        double accum = 0;
+
+        for (int i = 0; i <  dynamic_cast<Vector *>(this)->rows; ++i) {
+
+            accum +=  dynamic_cast<Vector *>(this)->entries[i] * dynamic_cast<Vector *>(this)->entries[i];
+        
+        }
+
+        dynamic_cast<Vector *>(this)->l2norm = sqrt(accum);
+
+        l2Norm = dynamic_cast<Vector *>(this)->l2norm;
         
 	}
 
+    return l2Norm;
+
 }
 
-Vector **CreateVectorArray(int m,int p){
+Vector* vectorArrayOlustur(int m,int p){
 	
-    Vector **vectorArray = (Vector**) calloc(m, sizeof(Vector*));  
+    Vector* vectorArray = (Vector*) malloc(m * sizeof(Vector));  
 	
+    srand (( unsigned ) time (NULL) ); //random sayı uretiyor
+
+
     for (int i = 0; i < m; i++) {           
-		vectorArray[i] = (Vector*) calloc(p, sizeof(Vector));
-	}
+        
+    	double* entries = (double*) malloc((p) * sizeof(double));
+
+        for(int j = 0 ; j < p; j++){
+
+            entries[j] = (int)((double)rand()/(double)(RAND_MAX) * 50);; 
+
+        }
+
+        Vector newVector(entries,p);
+        
+    	*(vectorArray + i) = newVector;
+	
+    }
+
 
 	return vectorArray;
 }
 
-void FillVectorArray(Vector** vectorArray, int m, int p){
-	
-    for(int i = 0; i < m; i++){
-	
-    	double *entries = (double*) calloc(p, sizeof(double));
-	
-    	for(int j = 0; j < p; j++){
-			entries[j] = (double) rand() / (double) (RAND_MAX) + 1.0; 
-		}
-	
-    	Vector *v = new Vector(entries,p);
-		vectorArray[i] = v;
-		delete[]entries;
-	
-    }
 
-}
+Matrix vectorArray2Matrix(Vector* vectorArray, int m, int p){
 
-Matrix vectorArray2Matrix(Vector** vectorArray, int m, int p){
-
-	double* entries = (double*) calloc(m * p, sizeof(double));
+	double* entries = (double*) malloc((m * p) * sizeof(double));
+	
+    Matrix matrix(entries, m, p);
 
 	for(int i = 0; i < m; i++){
-		for(int j = 0; j < p; j++){
-			entries[i + j * m] = vectorArray[i]->entries[j];
-		}
+		
+        for(int j = 0; j < p; j++){
+		
+        	matrix.entries[i * m + j] = vectorArray[i].entries[j];
+		
+        }
+
 	}
 
-	Matrix newMatrix(entries, p, m);
-
-	return newMatrix;
+	return matrix;
 }
